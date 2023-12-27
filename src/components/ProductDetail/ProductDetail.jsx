@@ -1,28 +1,41 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
 import axios from 'axios';
-import './ProductDetail.css'
 
-function GetPageId() {
-    return new URLSearchParams(window.location.search).get("id");
-}
+export default function ProductDetail() {
+  let { id } = useParams();
 
+  const [productDetail, setProductDetail] = useState(null);
 
-export default function ProductDetail() {    
-    const [product,setProduct]=useState({});
-    useEffect(() => {
-        console.log(GetProduct(GetPageId()));
-    }, []) 
-
-    const GetProduct= async (id)=>{
-        let result =  await axios.get("https://dummyjson.com/products/"+id)
-        let product = await result.data;
-        console.log(product);
-        setProduct(product);
-        return await product;
+  const getProduct = async () => {
+    try {
+      let response = await axios.get(`https://dummyjson.com/products/${id}`);
+      setProductDetail(response.data);
+    } catch (error) {
+      console.error('Ürün bulunamadı:', error);
     }
-    return(
-    <div className="container">
-       <div>{product.id}</div>
+  };
+
+  useEffect(() => {
+    getProduct();
+  }, [id]);
+
+  return (
+    <div className='container'>
+    <div className='card'>
+      <div className='card-body'>
+        {productDetail && (
+          <>
+            <img src={productDetail.thumbnail} alt='Product Thumbnail' />
+            <h1 className='card-title'>{productDetail.title}</h1>
+            <h5 className='card-title'>{productDetail.category}</h5>
+            <p className='card-text'>{productDetail.description}</p>
+            <p className='card-text'>Price: {productDetail.price}$</p>
+            <p className='card-text'>Stock: {productDetail.stock}</p>
+          </>
+        )}
+      </div>
+    </div>
     </div>
   );
 }

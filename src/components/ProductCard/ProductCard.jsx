@@ -13,7 +13,7 @@ export default function ProductCard(props) {
 				<h5 className="card-title">{props.product.title}</h5>
 				<p className="card-text">{props.product.description}</p>
 				<Link
-					to={"/productDetail?id=" + props.product.id}
+					to={"/productDetail/" + props.product.id}
 					className="btn btn-primary"
 				>
 					Details
